@@ -1,0 +1,15 @@
+﻿@model Vidly.ViewModels.MovieListViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movie List</h2>
+
+<ul>
+    @foreach(var movie in Model.Movies)
+    {
+        <li>@movie.Name</li>
+    }
+</ul>
+
