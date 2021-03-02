@@ -136,7 +136,9 @@ namespace Vidly.Controllers
         [HttpPost]
         public ActionResult Save(Movie movie)
         {
-
+            //check if movie is not present
+            //if not present, add
+            //if present, edit and modify
             if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.Now;
