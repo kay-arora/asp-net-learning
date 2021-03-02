@@ -46,8 +46,15 @@ namespace Vidly.Controllers
         public ActionResult Details(int id)
         {
             var movieData = _context.Movies.Include(m => m.Genre).FirstOrDefault(x => x.Id == id);
+            var genreList = _context.Genre.ToList();
 
-            return View(movieData);
+            var movieModel = new MovieFormViewModel()
+            {
+                Genre = genreList,
+                Movie = movieData
+            };
+
+            return View(movieModel);
         }
         // GET: Movies/Random
         public ActionResult Random()
@@ -112,6 +119,42 @@ namespace Vidly.Controllers
         public ActionResult ByReleaseDate(int year, int month)
         {
             return Content(year + "/" + month);
-        }        
+        }
+        
+        public ActionResult New()
+        {
+            var genreTypes = _context.Genre.ToList();
+
+            var movieModel = new MovieFormViewModel()
+            {
+                Genre = genreTypes
+            };
+
+            return View(movieModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Movie movie)
+        {
+
+            if (movie.Id == 0)
+            {
+                movie.DateAdded = DateTime.Now;
+                _context.Movies.Add(movie);
+            }
+            else
+            {
+                var movieDbData = _context.Movies.Single(x => x.Id == movie.Id);
+                movieDbData.Genre = movie.Genre;
+                movieDbData.GenreId = movie.GenreId;
+                movieDbData.Name = movie.Name;
+                movieDbData.NumberInStock = movie.NumberInStock;
+                movieDbData.ReleaseDate = movie.ReleaseDate;
+                movieDbData.DateAdded = DateTime.Now;
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Movies");
+        }
     }
 }

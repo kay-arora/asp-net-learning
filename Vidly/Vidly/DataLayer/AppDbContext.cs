@@ -11,8 +11,9 @@ namespace Vidly.DataLayer
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Customer> Customers { get; set; }
-
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<MembershipType> MembershipTypes { get; set; }
+        public DbSet<Genre> Genre { get; set; }
         public AppDbContext() : base("DefaultConnection", throwIfV1Schema: false) { }
 
         public static AppDbContext Create()

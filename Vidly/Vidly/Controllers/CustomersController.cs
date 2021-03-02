@@ -61,5 +61,56 @@ namespace Vidly.Controllers
             return View(customer);
             //return Content("Hello " + customer.Name);
         }
+
+        public ActionResult New()
+        {
+            var membershipType = _context.MembershipTypes.ToList();
+            var viewModel = new CustomerFormViewModel()
+            {
+                MembershipTypes = membershipType
+            };
+            return View("CustomerForm", viewModel);
+        }
+
+        //use post when we modify data
+        [HttpPost]
+        public ActionResult Save(Customer customer) //model binding is when MVC framework binds the request to a C# Model
+        {
+            if(customer.Id == 0)
+            {
+                //add customer to DB
+                _context.Customers.Add(customer); //at this point its not saved to the DB, it's just in the memory
+            }
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                customerInDb.Name = customer.Name;
+                customerInDb.BirthDate = customer.BirthDate;
+                customerInDb.IsSubscribedToNewsLetter = customer.IsSubscribedToNewsLetter;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+            }
+
+            //dbcontext has a tracking mechanism and would mark a record as added, modify or deleted 
+            _context.SaveChanges(); //at this point SQL statements are generated and DB changes are made
+
+            return RedirectToAction("Index", "Customers");
+
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel()
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+
+            };
+
+            return View("CustomerForm", viewModel); //to override the default view "Edit", we can pass a parameter to view to identify any other view
+        }
     }
 }
