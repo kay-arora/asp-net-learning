@@ -134,8 +134,20 @@ namespace Vidly.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
+            //check for validation errors
+            if (!ModelState.IsValid)
+            {
+                var movieModel = new MovieFormViewModel()
+                {
+                    Genre = _context.Genre.ToList(),
+                    Movie = movie
+                };
+
+                return View("New", movieModel);
+            }
             //check if movie is not present
             //if not present, add
             //if present, edit and modify

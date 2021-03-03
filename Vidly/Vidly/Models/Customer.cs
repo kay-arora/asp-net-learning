@@ -11,7 +11,7 @@ namespace Vidly.Models
         public int Id { get; set; }
 
         //out column name wont be nullable
-        [Required]
+        [Required(ErrorMessage = "Please Enter customer's name.")]
         [StringLength(255)]
         public string Name { get; set; }
         public bool IsSubscribedToNewsLetter { get; set; }
@@ -24,6 +24,8 @@ namespace Vidly.Models
         [Display(Name = "Membership Type")]
         public byte MembershipTypeId { get; set; }
 
+        [Display(Name = "Date of Birth")]
+        [Min18YearsIfAMember]
         public DateTime? BirthDate { get; set; }
 
 

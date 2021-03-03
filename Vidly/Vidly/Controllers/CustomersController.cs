@@ -67,6 +67,7 @@ namespace Vidly.Controllers
             var membershipType = _context.MembershipTypes.ToList();
             var viewModel = new CustomerFormViewModel()
             {
+                Customer = new Customer(),
                 MembershipTypes = membershipType
             };
             return View("CustomerForm", viewModel);
@@ -74,8 +75,19 @@ namespace Vidly.Controllers
 
         //use post when we modify data
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer) //model binding is when MVC framework binds the request to a C# Model
         {
+            if (!ModelState.IsValid) //model state is used for input validation
+            {
+                var viewModel = new CustomerFormViewModel()
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("CustomerForm", viewModel);
+            }
             if(customer.Id == 0)
             {
                 //add customer to DB
