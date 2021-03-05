@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Vidly.Dtos;
 
 namespace Vidly.Models
 {
@@ -14,7 +15,7 @@ namespace Vidly.Models
         {
             //validation context gives the object that we are working on. 
             //since it is an object, we need to cast it as a customer
-            var customer = (Customer) validationContext.ObjectInstance;
+            var customer = (CustomerDtos) validationContext.ObjectInstance;
 
             if (customer.MembershipTypeId == MembershipType.unknown || customer.MembershipTypeId == MembershipType.PayAsYouGo)
                 return ValidationResult.Success; // static property of the validationResult
